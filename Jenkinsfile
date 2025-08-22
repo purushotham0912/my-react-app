@@ -1,42 +1,27 @@
 pipeline {
     agent any
- 
-    environment {
-        NODE_ENV = 'production'
-    }
- 
+
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git url: https://github.com/purushotham0912/my-react-app.git
+                git url: 'https://github.com/purushotham0912/my-react-app.git', branch: 'main'
             }
         }
- 
-        stage('Install Dependencies') {
+
+        stage('Build') {
             steps {
                 sh 'npm install'
-            }
-        }
- 
-        stage('Build React App') {
-            steps {
                 sh 'npm run build'
             }
         }
- 
-        stage('List Build Output') {
+
+        stage('Deploy') {
             steps {
-                sh 'ls -l build'
+                sh '''
+                sudo rm -rf /var/www/html/my-react-app/*
+                sudo cp -r build/* /var/www/html/my-react-app/
+                '''
             }
-        }
-    }
- 
-    post {
-        success {
-            echo "✅ React app built successfully!"
-        }
-        failure {
-            echo "❌ Build failed. Check logs above."
         }
     }
 }
