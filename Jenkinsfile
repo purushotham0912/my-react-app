@@ -2,13 +2,14 @@ pipeline {
     agent any
 
     tools {
-        nodejs "nodejs"   // must match exactly the name in Jenkins → Tools
+        nodejs "nodejs"   // must match the name in Manage Jenkins → Tools
     }
 
     stages {
         stage('Clone Repo') {
             steps {
-                git branch: 'main', url: 'https://github.com/purushotham0912/my-react-app.git'
+                git branch: 'main',
+                    url: 'https://github.com/purushotham0912/my-react-app.git'
             }
         }
 
@@ -24,13 +25,13 @@ pipeline {
             }
         }
 
-       stage('Deploy') {
+        stage('Deploy') {
             steps {
                 sh '''
-                  sudo rm -rf /var/www/html/my-react-app/*
-                  sudo cp -r build/* /var/www/html/my-react-app/
+                  rm -rf /var/www/html/my-react-app/*
+                  cp -r build/* /var/www/html/my-react-app/
                 '''
             }
-       
+        }
     }
 }
