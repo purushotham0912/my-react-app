@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs "Node20"   // must match the name in Manage Jenkins → Tools
+        nodejs "Nodejs"   // must match the name in Manage Jenkins → Tools
     }
 
     stages {
