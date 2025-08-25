@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     tools {
-        nodejs "nodejs"   // or "NodeJS-20" if you configured it in Jenkins
+        nodejs "Node20"   // must match the name in Manage Jenkins → Tools
     }
 
     stages {
         stage('Clone Repo') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/purushotham0912/my-react-app.git'
+                git branch: 'main', url: 'https://github.com/purushotham0912/my-react-app.git'
             }
         }
 
@@ -27,7 +26,10 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'sudo cp -r build/* /var/www/html/my-react-app/'
+                sh '''
+                  sudo rm -rf /var/www/html/my-react-app/*
+                  sudo cp -r build/* /var/www/html/my-react-app/
+                '''
             }
         }
     }
