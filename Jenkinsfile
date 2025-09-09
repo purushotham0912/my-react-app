@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh '''
                 sudo rm -rf /var/www/html/my-react-app/*
-                sudo cp -r build/* /var/www/html/my-react-apppp/
+                sudo cp -r build/* /var/www/html/my-react-app/
                 '''
             }
         }
