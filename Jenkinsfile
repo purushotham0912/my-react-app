@@ -19,11 +19,18 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh 'npm run build'
-            }
-        }
+       stage('Build') {
+    steps {
+        sh '''
+            # Clean old build folder (fix permission issues)
+            sudo rm -rf build
+
+            # Build fresh
+            npm run build
+        '''
+    }
+}
+
 
         stage('Deploy') {
             steps {
