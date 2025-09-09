@@ -1,16 +1,26 @@
 pipeline {
     agent any
 
+    environment {
+        DEPLOY_DIR = "/var/www/html/my-react-app"
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/purushotham0912/my-react-app.git', branch: 'main'
+                git branch: 'main',
+                    url: 'https://github.com/purushotham0912/my-react-app.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm install'
                 sh 'npm run build'
             }
         }
@@ -18,10 +28,28 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                sudo rm -rf /var/www/html/my-react-app/*
-                sudo cp -r build/* /var/www/html/my-react-app/
+                    # Ensure deploy directory exists
+                    sudo mkdir -p $DEPLOY_DIR
+
+                    # Clean old files
+                    sudo rm -rf $DEPLOY_DIR/*
+
+                    # Copy new build
+                    sudo cp -r build/* $DEPLOY_DIR/
+
+                    # Reload nginx to serve updated files
+                    sudo systemctl reload nginx
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Deployment successful! React app is live."
+        }
+        failure {
+            echo "❌ Deployment failed. Check Jenkins logs."
         }
     }
 }
